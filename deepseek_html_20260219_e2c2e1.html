@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS X // NEURAL CORE v10.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --neon-blue: #00f0ff;
+            --neon-glow: rgba(0, 240, 255, 0.9);
+            --bg-dark: #010a12;
+            --bg-darker: #00080f;
+            --panel-glow: 0 0 20px rgba(0, 240, 255, 0.3);
+            --text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(0, 240, 255, 0.03) 0%, transparent 30%),
+                linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            color: var(--neon-blue);
+            font-family: 'Share Tech Mono', monospace;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15) 0px,
+                rgba(0, 240, 255, 0.02) 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            animation: scan 8s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 700px;
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            border: 2px solid var(--neon-blue);
+            background: rgba(1, 10, 18, 0.92);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 50px rgba(0, 240, 255, 0.2), inset 0 0 30px rgba(0, 240, 255, 0.1);
+            border-radius: 12px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--neon-blue);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            text-shadow: var(--text-shadow);
+            animation: flicker 3s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 1; }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.4; }
+        }
+
+        .status-badge {
+            border: 1px solid var(--neon-blue);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            background: rgba(0, 240, 255, 0.05);
+            box-shadow: var(--panel-glow);
+            letter-spacing: 2px;
+        }
+
+        .neural-core {
+            width: 90px;
+            height: 90px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 60px var(--neon-blue), 0 0 120px rgba(0, 240, 255, 0.6);
+            margin: 10px auto 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .neural-core::before {
+            content: '';
+            position: absolute;
+            width: 130%;
+            height: 130%;
+            border: 2px solid var(--neon-blue);
+            border-radius: 50%;
+            animation: ping 2s infinite;
+        }
+
+        .neural-core::after {
+            content: '⚡';
+            font-size: 2.5rem;
+            color: var(--bg-dark);
+            text-shadow: 0 0 10px black;
+        }
+
+        @keyframes ping {
+            0% { transform: scale(0.8); opacity: 0.8; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .pulse {
+            animation: corePulse 0.5s infinite alternate;
+        }
+
+        @keyframes corePulse {
+            from { transform: scale(1); box-shadow: 0 0 60px var(--neon-blue); }
+            to { transform: scale(1.2); box-shadow: 0 0 100px var(--neon-blue), 0 0 200px rgba(0, 240, 255, 0.8); }
+        }
+
+        .stream-container {
+            flex-grow: 1;
+            border: 1px solid var(--neon-blue);
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 1rem;
+            background: rgba(0, 8, 15, 0.8);
+            box-shadow: inset 0 0 30px rgba(0, 240, 255, 0.1), var(--panel-glow);
+            overflow-y: auto;
+            border-radius: 8px;
+            line-height: 1.8;
+            scroll-behavior: smooth;
+        }
+
+        .stream-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .stream-container::-webkit-scrollbar-track {
+            background: var(--bg-darker);
+        }
+
+        .stream-container::-webkit-scrollbar-thumb {
+            background: var(--neon-blue);
+            border-radius: 10px;
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .message-line {
+            margin-bottom: 10px;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-msg {
+            color: #ffffff;
+            text-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
+
+        .jarvis-msg {
+            color: var(--neon-blue);
+            text-shadow: 0 0 8px var(--neon-blue);
+        }
+
+        .system-msg {
+            color: #7fdf7f;
+            text-shadow: 0 0 5px #00ff00;
+        }
+
+        .error-msg {
+            color: #ff6b6b;
+            text-shadow: 0 0 8px #ff0000;
+        }
+
+        .init-btn {
+            background: transparent;
+            color: var(--neon-blue);
+            border: 2px solid var(--neon-blue);
+            padding: 18px 25px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            cursor: pointer;
+            box-shadow: 0 0 25px var(--neon-blue), inset 0 0 15px rgba(0, 240, 255, 0.3);
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            background: rgba(0, 240, 255, 0.03);
+            width: 100%;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .init-btn:hover {
+            background: var(--neon-blue);
+            color: #000;
+            box-shadow: 0 0 50px var(--neon-blue), inset 0 0 30px white;
+            transform: scale(1.02);
+        }
+
+        .init-btn:active {
+            transform: scale(0.98);
+        }
+
+        .init-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .init-btn:hover::before {
+            left: 100%;
+        }
+
+        .init-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+            border-color: #666;
+            box-shadow: none;
+        }
+
+        .status-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: rgba(0, 240, 255, 0.7);
+            border-top: 1px solid rgba(0, 240, 255, 0.2);
+            padding-top: 15px;
+        }
+
+        .listening-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff4444;
+            display: inline-block;
+            margin-left: 8px;
+            box-shadow: 0 0 10px #ff4444;
+            transition: all 0.3s;
+        }
+
+        .listening-dot.active {
+            background: #44ff44;
+            box-shadow: 0 0 15px #44ff44;
+            animation: blinkGreen 1s infinite;
+        }
+
+        @keyframes blinkGreen {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .glitch-text {
+            position: relative;
+            display: inline-block;
+        }
+
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch-text::before {
+            color: #ff00ff;
+            z-index: -1;
+            animation: glitch-1 0.4s infinite;
+        }
+
+        .glitch-text::after {
+            color: #00ffff;
+            z-index: -2;
+            animation: glitch-2 0.4s infinite;
+        }
+
+        @keyframes glitch-1 {
+            0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+            20% { clip-path: inset(20% 0 30% 0); transform: translate(-2px, 2px); }
+            40% { clip-path: inset(50% 0 20% 0); transform: translate(2px, -1px); }
+            60% { clip-path: inset(10% 0 60% 0); transform: translate(-1px, 1px); }
+            80% { clip-path: inset(80% 0 5% 0); transform: translate(1px, -2px); }
+        }
+
+        @keyframes glitch-2 {
+            0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+            20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -2px); }
+            40% { clip-path: inset(20% 0 50% 0); transform: translate(-2px, 1px); }
+            60% { clip-path: inset(30% 0 40% 0); transform: translate(1px, -1px); }
+            80% { clip-path: inset(5% 0 80% 0); transform: translate(-1px, 2px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <span class="title" data-text="JARVIS X">JARVIS X</span>
+            <span class="status-badge" id="statusBadge">NEURAL OFFLINE</span>
+        </div>
+        
+        <div id="core" class="neural-core"></div>
+        
+        <div class="stream-container" id="stream">
+            <div class="message-line system-msg">> SYSTEM BOOT SEQUENCE INITIATED...</div>
+            <div class="message-line system-msg">> NEURAL INTERFACE v10.0 LOADED</div>
+            <div class="message-line system-msg">> AWAITING UPLINK COMMAND</div>
+        </div>
+        
+        <button class="init-btn" id="initBtn">⟳ INITIALIZE NEURAL LINK</button>
+        
+        <div class="status-footer">
+            <span>⚡ NEURAL SYNC: <span id="syncStatus">0%</span></span>
+            <span>🎙️ VOICE: <span id="voiceStatus">STANDBY</span> <span id="listeningDot" class="listening-dot"></span></span>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ==================== CONFIGURATION ====================
+            const API_KEY = "AIzaSyBY4-cxGgsM8RJexJQ7Bl9hAnphcoYyww8";
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+            
+            // ==================== DOM ELEMENTS ====================
+            const initBtn = document.getElementById('initBtn');
+            const stream = document.getElementById('stream');
+            const core = document.getElementById('core');
+            const statusBadge = document.getElementById('statusBadge');
+            const syncStatus = document.getElementById('syncStatus');
+            const voiceStatus = document.getElementById('voiceStatus');
+            const listeningDot = document.getElementById('listeningDot');
+            
+            // ==================== STATE MANAGEMENT ====================
+            let isInitialized = false;
+            let isListening = false;
+            let isSpeaking = false;
+            let reconnectAttempts = 0;
+            const maxReconnectAttempts = 5;
+            
+            // ==================== VOICE SETUP (10/10 HUMAN) ====================
+            const synth = window.speechSynthesis;
+            let selectedVoice = null;
+            let voicesLoaded = false;
+            
+            // Voice loading with retry
+            function loadVoices() {
+                const voices = synth.getVoices();
+                if (voices.length > 0) {
+                    // Priority: en-IN male > en-US male > any male > first english
+                    selectedVoice = voices.find(v => v.lang === 'en-IN' && v.name.toLowerCase().includes('male')) ||
+                                   voices.find(v => v.lang === 'en-US' && v.name.toLowerCase().includes('male')) ||
+                                   voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('male')) ||
+                                   voices.find(v => v.lang.startsWith('en')) ||
+                                   voices[0];
+                    voicesLoaded = true;
+                    console.log('Voice loaded:', selectedVoice?.name, selectedVoice?.lang);
+                }
+            }
+            
+            // Initial load
+            loadVoices();
+            
+            // Event listener for async voice loading
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = () => {
+                    loadVoices();
+                    if (!voicesLoaded) {
+                        setTimeout(loadVoices, 500);
+                    }
+                };
+            }
+            
+            // Fallback: retry every 500ms until loaded
+            const voiceLoadInterval = setInterval(() => {
+                if (!voicesLoaded && synth.getVoices().length > 0) {
+                    loadVoices();
+                }
+                if (voicesLoaded) clearInterval(voiceLoadInterval);
+            }, 500);
+            
+            // ==================== SPEECH FUNCTION (PERFECT HUMAN) ====================
+            function speak(text) {
+                return new Promise((resolve) => {
+                    if (!synth || !text) {
+                        resolve();
+                        return;
+                    }
+                    
+                    // Cancel any ongoing speech
+                    synth.cancel();
+                    
+                    // Pre-pause for natural human rhythm (400ms)
+                    setTimeout(() => {
+                        // Split into sentences for natural breaks
+                        const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+                        let sentenceIndex = 0;
+                        
+                        function speakNextSentence() {
+                            if (sentenceIndex >= sentences.length) {
+                                isSpeaking = false;
+                                core.classList.remove('pulse');
+                                voiceStatus.innerText = 'LISTENING';
+                                if (isListening) startRecognition();
+                                resolve();
+                                return;
+                            }
+                            
+                            const sentence = sentences[sentenceIndex].trim();
+                            if (!sentence) {
+                                sentenceIndex++;
+                                speakNextSentence();
+                                return;
+                            }
+                            
+                            const utterance = new SpeechSynthesisUtterance(sentence);
+                            
+                            // Perfect human voice configuration
+                            utterance.voice = selectedVoice;
+                            utterance.pitch = 0.92; // Slightly lower, natural male
+                            utterance.rate = 1.0; // Normal speaking rate
+                            utterance.volume = 1.0;
+                            
+                            // Natural inflection through minor pitch variation
+                            utterance.pitch = 0.92 + (Math.random() * 0.03 - 0.015);
+                            
+                            // Events
+                            utterance.onstart = () => {
+                                isSpeaking = true;
+                                core.classList.add('pulse');
+                                voiceStatus.innerText = 'SPEAKING';
+                                if (isListening) {
+                                    try { recognition.stop(); } catch (e) {}
+                                }
+                            };
+                            
+                            utterance.onend = () => {
+                                sentenceIndex++;
+                                // Natural pause between sentences (200-300ms)
+                                setTimeout(speakNextSentence, 250 + Math.random() * 100);
+                            };
+                            
+                            utterance.onerror = (e) => {
+                                console.warn('Speech error:', e);
+                                sentenceIndex++;
+                                speakNextSentence();
+                            };
+                            
+                            synth.speak(utterance);
+                        }
+                        
+                        speakNextSentence();
+                    }, 400); // Natural pre-speech pause
+                });
+            }
+            
+            // ==================== SPEECH RECOGNITION (PERFECT) ====================
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (!SpeechRecognition) {
+                addMessage('ERROR: Speech recognition not supported. Use Chrome/Edge.', 'error-msg');
+            }
+            
+            const recognition = new SpeechRecognition();
+            
+            // Perfect recognition configuration
+            recognition.continuous = true;
+            recognition.interimResults = false; // Only final results for accuracy
+            recognition.lang = 'en-IN'; // Indian English for natural accent
+            recognition.maxAlternatives = 1;
+            
+            // Recognition event handlers
+            recognition.onstart = () => {
+                isListening = true;
+                listeningDot.classList.add('active');
+                voiceStatus.innerText = 'LISTENING';
+                statusBadge.innerText = 'NEURAL ACTIVE';
+                syncStatus.innerText = '100%';
+            };
+            
+            recognition.onend = () => {
+                if (isListening && isInitialized && !isSpeaking) {
+                    // Reconnect with exponential backoff
+                    setTimeout(() => {
+                        if (isListening && !isSpeaking) {
+                            try {
+                                recognition.start();
+                            } catch (e) {
+                                console.warn('Reconnect failed:', e);
+                            }
+                        }
+                    }, Math.min(1000 * Math.pow(2, reconnectAttempts), 10000));
+                    reconnectAttempts++;
+                } else if (!isListening) {
+                    listeningDot.classList.remove('active');
+                    voiceStatus.innerText = 'STANDBY';
+                }
+            };
+            
+            recognition.onerror = (event) => {
+                console.warn('Recognition error:', event.error);
+                
+                if (event.error === 'no-speech') {
+                    // Ignore, just continue listening
+                    return;
+                }
+                
+                if (event.error === 'not-allowed') {
+                    addMessage('ERROR: Microphone access denied. Please allow permissions.', 'error-msg');
+                    isListening = false;
+                    listeningDot.classList.remove('active');
+                    voiceStatus.innerText = 'BLOCKED';
+                } else if (event.error === 'network') {
+                    addMessage('WARNING: Network error. Retrying...', 'system-msg');
+                }
+                
+                // Attempt to restart if still should be listening
+                if (isListening && isInitialized && !isSpeaking) {
+                    setTimeout(() => {
+                        try { recognition.start(); } catch (e) {}
+                    }, 1500);
+                }
+            };
+            
+            recognition.onresult = async (event) => {
+                reconnectAttempts = 0; // Reset reconnect attempts on successful result
+                
+                // Get the last result (most accurate)
+                const lastResult = event.results[event.results.length - 1];
+                if (!lastResult.isFinal) return;
+                
+                const transcript = lastResult[0].transcript.trim();
+                if (!transcript) return;
+                
+                // Add user message to stream
+                addMessage(transcript, 'user-msg');
+                
+                // Stop listening while processing/speaking
+                if (isListening) {
+                    try { recognition.stop(); } catch (e) {}
+                }
+                
+                // Process with Gemini
+                await processWithGemini(transcript);
+            };
+            
+            // ==================== GEMINI API PROCESSING ====================
+            async function processWithGemini(userInput) {
+                addMessage('> PROCESSING NEURAL QUERY...', 'system-msg');
+                
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: `You are Jarvis X, a calm, intelligent human-like assistant. 
+                                    Speak naturally, confidently, and briefly (1-2 sentences max). 
+                                    Never sound robotic. No lists unless necessary. 
+                                    User said: ${userInput}`
+                                }]
+                            }]
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`API error: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    // Extract reply
+                    let reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    if (!reply) {
+                        throw new Error('Empty response from API');
+                    }
+                    
+                    // Clean up reply (remove markdown, quotes, etc.)
+                    reply = reply.replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '').trim();
+                    
+                    // Add to stream
+                    addMessage(reply, 'jarvis-msg');
+                    
+                    // Speak the reply
+                    await speak(reply);
+                    
+                    // Resume listening after speaking
+                    if (isListening && isInitialized) {
+                        startRecognition();
+                    }
+                    
+                } catch (error) {
+                    console.error('API Error:', error);
+                    addMessage(`ERROR: Neural link failed - ${error.message}`, 'error-msg');
+                    
+                    // Fallback response
+                    const fallback = "I'm having trouble connecting to my neural core. Please try again.";
+                    addMessage(fallback, 'jarvis-msg');
+                    await speak(fallback);
+                    
+                    if (isListening && isInitialized) {
+                        startRecognition();
+                    }
+                }
+            }
+            
+            // ==================== HELPER FUNCTIONS ====================
+            function addMessage(text, className) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message-line ${className}`;
+                
+                // Add prefix based on type
+                if (className === 'user-msg') {
+                    messageDiv.innerHTML = `👤 <span style="color:#aaa;">>></span> ${text}`;
+                } else if (className === 'jarvis-msg') {
+                    messageDiv.innerHTML = `⚡ JARVIS X <span style="color:var(--neon-blue);">>></span> ${text}`;
+                } else if (className === 'system-msg') {
+                    messageDiv.innerHTML = `🔷 SYSTEM <span style="color:#7fdf7f;">>></span> ${text}`;
+                } else {
+                    messageDiv.innerHTML = `⚠️ ERROR <span style="color:#ff6b6b;">>></span> ${text}`;
+                }
+                
+                stream.appendChild(messageDiv);
+                stream.scrollTop = stream.scrollHeight;
+            }
+            
+            function startRecognition() {
+                if (!isInitialized || isSpeaking) return;
+                
+                try {
+                    recognition.start();
+                } catch (e) {
+                    // If already started, ignore
+                    if (e.message.includes('started')) {
+                        isListening = true;
+                    } else {
+                        console.warn('Start recognition failed:', e);
+                    }
+                }
+            }
+            
+            // ==================== INITIALIZATION ====================
+            initBtn.addEventListener('click', async () => {
+                if (isInitialized) return;
+                
+                isInitialized = true;
+                initBtn.disabled = true;
+                initBtn.innerText = '⟳ NEURAL LINK ESTABLISHED';
+                
+                // Clear stream and add boot messages
+                stream.innerHTML = '';
+                addMessage('> BOOT SEQUENCE COMPLETE', 'system-msg');
+                addMessage('> NEURAL INTERFACE v10.0 ACTIVATED', 'system-msg');
+                addMessage('> VOICE ENGINE: ONLINE', 'system-msg');
+                addMessage('> GEMINI CORE: AUTHENTICATED', 'system-msg');
+                
+                // Welcome message
+                const welcome = "Good day. Jarvis X online. All systems nominal. How may I assist?";
+                addMessage(welcome, 'jarvis-msg');
+                
+                // Ensure voices are loaded
+                if (!voicesLoaded && synth.getVoices().length > 0) {
+                    loadVoices();
+                }
+                
+                // Speak welcome
+                await speak(welcome);
+                
+                // Start listening
+                isListening = true;
+                startRecognition();
+            });
+            
+            // ==================== CLEANUP ====================
+            window.addEventListener('beforeunload', () => {
+                if (isListening) {
+                    try { recognition.stop(); } catch (e) {}
+                }
+                synth.cancel();
+            });
+            
+            // ==================== INITIAL DISPLAY ====================
+            addMessage('> VOICE CALIBRATION: OPTIMAL', 'system-msg');
+            addMessage('> READY FOR NEURAL UPLINK', 'system-msg');
+        })();
+    </script>
+</body>
+</html>
